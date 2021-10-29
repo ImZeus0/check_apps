@@ -62,7 +62,6 @@ if __name__ == '__main__':
     while 1:
         local_state = local_state()
         new_state = get_source()
-        #new_state = [{'name':'Pirate Slots','id':'390685585862216'},{'name':'Pirate Slots','id':'2950120141966355'},{'name':'Pirate Slots','id':'1097061317766214'},{'name':'test','id':'260502292693212'}]
         if new_state == None:
             print('Not update')
             exit()
