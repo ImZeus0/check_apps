@@ -83,6 +83,6 @@ if __name__ == '__main__':
         res = send_state_in_account(local_state)
         logging.info(f'Responce {res.text}')
         update_local_state_apps(local_state)
-        time.sleep(3600)
+        time.sleep(60)
 
 
