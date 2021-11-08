@@ -63,26 +63,26 @@ def local_state():
 
 if __name__ == '__main__':
     while 1:
-        local_state = local_state()
+        local_s = local_state()
         logging.info('Send request')
-        logging.info(f'local state {str(local_state)}')
+        logging.info(f'local state {str(local_s)}')
         new_state = get_source()
         logging.info(f'Source {str(new_state)}')
         if new_state == None:
             print('Not update')
             continue
         for new_app in new_state:
-            for local_app in local_state:
+            for local_app in local_s:
 
                 if new_app['name'] == local_app['appname']:
                     tmp = local_app['data']
                     tmp.append(new_app['id'])
                     tmp = set(tmp)
                     local_app['data'] = list(tmp)
-        logging.info(f'New state {str(local_state)}')
-        res = send_state_in_account(local_state)
+        logging.info(f'New state {str(local_s)}')
+        res = send_state_in_account(local_s)
         logging.info(f'Responce {res.text}')
-        update_local_state_apps(local_state)
+        update_local_state_apps(local_s)
         time.sleep(60)
 
 
