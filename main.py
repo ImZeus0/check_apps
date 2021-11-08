@@ -65,7 +65,7 @@ if __name__ == '__main__':
     while 1:
         local_state = local_state()
         logging.info('Send request')
-        logging.info(f'local state {str(local_state())}')
+        logging.info(f'local state {str(local_state)}')
         new_state = get_source()
         logging.info(f'Source {str(new_state)}')
         if new_state == None:
