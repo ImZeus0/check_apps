@@ -70,7 +70,7 @@ if __name__ == '__main__':
         logging.info(f'Source {str(new_state)}')
         if new_state == None:
             print('Not update')
-            break
+            continue
         for new_app in new_state:
             for local_app in local_state:
 
