@@ -1,10 +1,14 @@
 import json
 import time
 import requests
+import logging
+
+logging.basicConfig(filename='app.log', filemode='w', format='%(asctime)s - %(message)s')
+
 
 URL_SOURCE = 'https://apps.lukashenkopresidentnet.online/bot.php?zenkRequest=get_all_apps&secret=~6KBsKMPhS2Y'
 BASE_URL = 'http://127.0.0.1:3458/api'
-START_APP = '898274564163561'
+START_APP = '393313022536314'
 
 
 def get_source():
@@ -29,10 +33,9 @@ def get_all_apps():
     return None
 
 def send_state_in_account(state):
-    for app in state:
-        headers = {'Content-Type': 'application/json'}
-        responce = requests.post(f'{BASE_URL}/send_ids',headers=headers,json=app,verify=False)
-        print(responce.json())
+    headers = {'Content-Type': 'application/json'}
+    responce = requests.post(f'{BASE_URL}/send_ids',headers=headers,json=state,verify=False)
+    return responce
 
 def get_current_state_apps():
     apps = get_all_apps()
@@ -61,20 +64,24 @@ def local_state():
 if __name__ == '__main__':
     while 1:
         local_state = local_state()
+        logging.info('Send request')
+        logging.info(f'local state {str(local_state())}')
         new_state = get_source()
+        logging.info(f'Source {str(new_state)}')
         if new_state == None:
             print('Not update')
-            exit()
-
+            break
         for new_app in new_state:
             for local_app in local_state:
+
                 if new_app['name'] == local_app['appname']:
                     tmp = local_app['data']
                     tmp.append(new_app['id'])
                     tmp = set(tmp)
                     local_app['data'] = list(tmp)
-
-        send_state_in_account(local_state)
+        logging.info(f'New state {str(local_state)}')
+        res = send_state_in_account(local_state)
+        logging.info(f'Responce {res.text}')
         update_local_state_apps(local_state)
         time.sleep(3600)
 
