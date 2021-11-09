@@ -3,7 +3,14 @@ import time
 import requests
 import logging
 
-logging.basicConfig(filename='app.log', filemode='w', format='%(asctime)s - %(message)s')
+logfile = 'log_1.log'
+
+log = logging.getLogger("my_log")
+log.setLevel(logging.INFO)
+FH = logging.FileHandler(logfile)
+basic_formater = logging.Formatter('%(asctime)s : [%(levelname)s] : %(message)s')
+FH.setFormatter(basic_formater)
+log.addHandler(FH)
 
 
 URL_SOURCE = 'https://apps.lukashenkopresidentnet.online/bot.php?zenkRequest=get_all_apps&secret=~6KBsKMPhS2Y'
@@ -64,10 +71,10 @@ def local_state():
 if __name__ == '__main__':
     while 1:
         local_s = local_state()
-        logging.info('Send request')
-        logging.info(f'local state {str(local_s)}')
+        log.info('Send request')
+        log.info(f'local state {str(local_s)}')
         new_state = get_source()
-        logging.info(f'Source {str(new_state)}')
+        log.info(f'Source {str(new_state)}')
         if new_state == None:
             print('Not update')
             continue
