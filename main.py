@@ -14,7 +14,7 @@ log.addHandler(FH)
 
 
 URL_SOURCE = 'https://apps.lukashenkopresidentnet.online/bot.php?zenkRequest=get_all_apps&secret=~6KBsKMPhS2Y'
-BASE_URL = 'http://127.0.0.1:3458/api'
+BASE_URL = 'http://127.0.0.1:1111/api'
 START_APP = '393313022536314'
 
 
@@ -37,12 +37,19 @@ def get_all_apps():
     responce = requests.get(BASE_URL + '/all_apps')
     if responce.status_code == 200:
         return responce.json()
+    else:
+        logging.info(f'Responce get_all {responce.text}')
+
     return None
 
 def send_state_in_account(state):
     headers = {'Content-Type': 'application/json'}
     responce = requests.post(f'{BASE_URL}/send_ids',headers=headers,json=state,verify=False)
-    return responce
+    if responce.status_code == 200:
+        return responce
+    else:
+        logging.info(f'Responce send_state_in_account {responce.text}')
+
 
 def get_current_state_apps():
     apps = get_all_apps()
@@ -50,6 +57,8 @@ def get_current_state_apps():
     for app in apps:
         url = f'{BASE_URL}/get_ids?id_app={str(app["id"])}'
         res = requests.get(url)
+        if res.status_code != 200:
+            logging.info(f'Responce send_state_in_account {res.text}')
         data.append(res.json())
         time.sleep(3)
     return data
@@ -76,11 +85,10 @@ if __name__ == '__main__':
         new_state = get_source()
         log.info(f'Source {str(new_state)}')
         if new_state == None:
-            print('Not update')
             continue
+        print('Update')
         for new_app in new_state:
             for local_app in local_s:
-
                 if new_app['name'] == local_app['appname']:
                     tmp = local_app['data']
                     tmp.append(new_app['id'])
